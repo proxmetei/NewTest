@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+
+  newtest_postgresql:
+    image: postgres:14.1
+            
+  newtest_api:
+    image: ${DOCKER_REGISTRY-}newtestapi
+    build:
+      context: .
+      dockerfile: Systems/Api/NewTest.Api/Dockerfile
+    depends_on:
+      newtest_postgresql:
+            condition: service_healthy

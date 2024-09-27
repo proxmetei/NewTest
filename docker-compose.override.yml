@@ -1,0 +1,33 @@
+version: '3.4'
+
+services:
+  newtest_postgresql:
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+    ports:
+      - "25432:5432"
+    networks:
+      - shared_newtest
+    volumes:      
+      - ~/.docker-conf/postgresql/data/:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  newtest_api:
+    ports:
+      - "10000:8080"
+    networks:
+      - shared_newtest
+    env_file:
+      - env.api
+
+networks:
+  shared_newtest:
+    name: newtest
+    driver: bridge
+  
